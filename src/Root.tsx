@@ -22,6 +22,14 @@ export const RemotionRoot: React.FC = () => {
         width={exampleSpec.width}
         height={exampleSpec.height}
         defaultProps={{ spec: exampleSpec }}
+        // Lets a JSON spec passed via --props drive duration/fps/dimensions,
+        // e.g. npx remotion render src/index.ts Short out.mp4 --props=specs/foo.json
+        calculateMetadata={({ props }) => ({
+          durationInFrames: props.spec.durationInFrames,
+          fps: props.spec.fps,
+          width: props.spec.width,
+          height: props.spec.height,
+        })}
       />
       <Composition
         id="ShipSpriteStill"

@@ -78,3 +78,23 @@ default until you generate your own.
 > The image-URL field in the result is extracted tolerantly; if a generation
 > ever returns an unexpected shape, `pipeline/image.ts` prints the metadata so
 > you can adjust `extractImageUrl()`.
+
+## Phase 4 — Gemini writes the spec
+Give a topic → Gemini returns a complete, **validated** VideoSpec (narration
+script + route coordinates + camera beats + overlays) written to `specs/<id>.json`.
+Needs `GEMINI_API_KEY` in `.env` and the host `generativelanguage.googleapis.com`
+allowed in your network policy.
+
+```bash
+npm run script -- "The voyage of Magellan" 40      # 40-second short
+# → specs/voyage-of-magellan.json (validated against the schema, auto-repaired once if needed)
+```
+
+Render any JSON spec directly (duration/size are read from the file):
+```bash
+npx remotion render src/index.ts Short out/magellan.mp4 \
+  --props=specs/voyage-of-magellan.json --gl=swiftshader
+```
+
+`specs/example.json` is a committed reference of the exact format Gemini targets.
+Output is validated with Zod (`src/lib/validateSpec.ts`) before it's saved.

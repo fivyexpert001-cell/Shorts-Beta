@@ -222,10 +222,17 @@ timings vs. keeping them authored in the spec.)
 Remaining: run `npm run sprite -- ship` with your key to replace the placeholder
 with a real Seedream sprite (confirm the image-URL field matches `extractImageUrl`).
 
-### Phase 4 — Script generation
-- `pipeline/1-script.ts`: Gemini prompt that outputs a **valid video spec JSON**
-  (narration text + coordinates + camera beats + overlays). Validate against the
-  TypeScript schema; reject/repair malformed output.
+### Phase 4 — Script generation 🟡 output→render DONE / Gemini call ready to run
+- `pipeline/script.ts` (`npm run script`): Gemini prompt → **valid VideoSpec JSON**
+  (narration text + coordinates + camera beats + overlays). ✅
+- `src/lib/validateSpec.ts` (Zod): validates output; one auto-repair retry on
+  invalid/non-JSON responses. ✅
+- `Short` composition `calculateMetadata` reads duration/fps/dimensions from the
+  spec, so any `specs/*.json` renders via `--props`. ✅ **verified** with
+  `specs/example.json` (committed as the reference format).
+
+Remaining: run `npm run script` with a Gemini key (allow
+`generativelanguage.googleapis.com`) to generate a real spec end to end.
 
 ### Phase 5 — Full automation
 - `pipeline/render.ts`: topic in → script → voice → assets → music → render → MP4 out.

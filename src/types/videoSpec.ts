@@ -42,6 +42,8 @@ export interface Overlay {
 }
 
 export interface Narration {
+  /** The narration script text (written by Gemini; spoken by pipeline/voice.ts). */
+  text?: string;
   /** Path under public/ for the TTS audio, e.g. "narration/example.mp3". */
   audioSrc?: string;
   /** Path under public/ for the SRT captions, e.g. "narration/example.srt". */
