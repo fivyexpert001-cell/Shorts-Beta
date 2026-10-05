@@ -1,0 +1,31 @@
+# Secrets — NEVER commit real API keys
+.env
+.env.local
+*.key
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-error.log*
+.pnp.*
+
+# Remotion / build output
+out/
+build/
+dist/
+.remotion/
+
+# Generated media (large binaries — keep out of git)
+assets/generated/
+output/
+*.mp4
+*.mov
+*.wav
+*.mp3
+!assets/samples/*.mp3
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+*.log
