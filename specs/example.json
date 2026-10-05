@@ -1,0 +1,86 @@
+{
+  "id": "voyage-example",
+  "fps": 30,
+  "durationInFrames": 360,
+  "width": 1080,
+  "height": 1920,
+  "mapStyleUrl": "local-countries",
+  "camera": [
+    {
+      "atFrame": 0,
+      "center": [
+        -6,
+        36
+      ],
+      "zoom": 2.4,
+      "pitch": 0,
+      "bearing": 0
+    },
+    {
+      "atFrame": 330,
+      "center": [
+        100,
+        5
+      ],
+      "zoom": 2.2,
+      "pitch": 0,
+      "bearing": 0
+    }
+  ],
+  "route": {
+    "coordinates": [
+      [
+        -6,
+        36
+      ],
+      [
+        -17,
+        14
+      ],
+      [
+        -43,
+        -23
+      ],
+      [
+        -70,
+        -54
+      ],
+      [
+        -120,
+        0
+      ],
+      [
+        147,
+        13
+      ],
+      [
+        123,
+        11
+      ]
+    ],
+    "revealStartFrame": 30,
+    "revealEndFrame": 330,
+    "cameraFollows": true,
+    "sprite": {
+      "image": "sprites/ship-placeholder.png",
+      "size": 96
+    }
+  },
+  "overlays": [
+    {
+      "kind": "year",
+      "text": "1519",
+      "atFrame": 0,
+      "durationFrames": 90
+    },
+    {
+      "kind": "title",
+      "text": "The First Voyage\nAround the World",
+      "atFrame": 30,
+      "durationFrames": 120
+    }
+  ],
+  "narration": {
+    "srtSrc": "sample-captions.srt"
+  }
+}

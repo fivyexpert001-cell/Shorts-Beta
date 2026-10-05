@@ -1,0 +1,7 @@
+1
+00:00:05,000 --> 00:00:08,000
+In 1519, five ships left Spain
+
+2
+00:00:08,000 --> 00:00:11,500
+to find a westward route to the Spice Islands
