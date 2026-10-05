@@ -56,3 +56,25 @@ Voice id prefixes: `clone_` (your clone), `elevenlabs_` (premium), `edge_`/`koko
 `public/sample-captions.srt` so caption rendering can be previewed offline.
 
 > ⚠️ Clone only a voice you own or have permission for — not another creator's.
+
+## Phase 3 — sprites (ai33.pro image gen / Seedream)
+Generate the ship/army/flag icons that ride the map. Needs `AI33PRO_API_KEY` in `.env`.
+
+```bash
+npm run sprite -- ship          # built-in prompt → public/sprites/ship.png
+npm run sprite -- army          # also: flag, arrow, city, explosion
+npm run sprite -- "a lighthouse, flat vector, transparent background" lighthouse
+```
+
+Then point a spec's route at it:
+```ts
+route.sprite = { image: "sprites/ship.png", size: 96 }
+```
+If the file is missing, the composition falls back to the built-in inline SVG
+ship, so the example always renders. A committed `sprites/ship-placeholder.png`
+(exported from the inline ship via the `ShipSpriteStill` composition) is the
+default until you generate your own.
+
+> The image-URL field in the result is extracted tolerantly; if a generation
+> ever returns an unexpected shape, `pipeline/image.ts` prints the metadata so
+> you can adjust `extractImageUrl()`.

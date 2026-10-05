@@ -209,10 +209,18 @@ Remaining in Phase 2: run `npm run voice` with a real key to produce
 sync on a full render. (Still deciding whether to also drive camera beats from SRT
 timings vs. keeping them authored in the spec.)
 
-### Phase 3 — Generated sprites
-- `pipeline/3-assets.ts`: `POST /v1i/task/generate-image` (model `bytedance-seedream-4.5`,
-  e.g. `aspect_ratio:1:1`) → poll → download PNG for ship/army/flag/icon.
-- Build a small **reusable sprite library** (generate once, reuse across videos).
+### Phase 3 — Generated sprites 🟡 render side DONE / API side ready to run
+- `pipeline/image.ts` (`npm run sprite`): `POST /v1i/task/generate-image`
+  (`bytedance-seedream-4.5`) → poll → download PNG to `public/sprites/`. Has a
+  built-in prompt library (ship/army/flag/arrow/city/explosion) + custom prompts. ✅
+- `VideoSpec.route.sprite` + `Short`/`MapLibreMap` render an `<Img>` sprite that
+  rides the route's lead point, falling back to the inline SVG ship. ✅
+- Committed `public/sprites/ship-placeholder.png` (exported via the
+  `ShipSpriteStill` composition) so the image path is **verified offline**. ✅
+- Reusable library: generate a sprite once, reuse across videos. ✅
+
+Remaining: run `npm run sprite -- ship` with your key to replace the placeholder
+with a real Seedream sprite (confirm the image-URL field matches `extractImageUrl`).
 
 ### Phase 4 — Script generation
 - `pipeline/1-script.ts`: Gemini prompt that outputs a **valid video spec JSON**

@@ -16,12 +16,22 @@ export interface CameraBeat extends CameraState {
   atFrame: number;
 }
 
+export interface SpriteSpec {
+  /** Path under public/ for a generated sprite PNG, e.g. "sprites/ship.png".
+   *  If omitted, the built-in inline SVG ship is used. */
+  image?: string;
+  /** Rendered size in px (default 72). */
+  size?: number;
+}
+
 export interface RouteSpec {
   coordinates: LngLat[];
   revealStartFrame: number;
   revealEndFrame: number;
   /** If true, the camera follows the leading point of the revealed route. */
   cameraFollows?: boolean;
+  /** The marker that rides the leading point of the route. */
+  sprite?: SpriteSpec;
 }
 
 export interface Overlay {

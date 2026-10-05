@@ -30,7 +30,11 @@ export const exampleSpec: VideoSpec = {
     ],
     revealStartFrame: FPS * 1,
     revealEndFrame: FPS * 11,
-    cameraFollows: false,
+    cameraFollows: true, // keep the ship framed; set false for a world-pan look
+    // Generated sprite path (public/sprites/...). Falls back to the inline SVG
+    // ship if the file is missing. Replace with a Seedream sprite:
+    //   npm run sprite -- ship   →   image: "sprites/ship.png"
+    sprite: { image: "sprites/ship-placeholder.png", size: 96 },
   },
   overlays: [
     { kind: "year", text: "1519", atFrame: 0, durationFrames: FPS * 3 },

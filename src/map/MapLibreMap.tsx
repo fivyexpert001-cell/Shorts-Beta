@@ -5,6 +5,8 @@ import {
   AbsoluteFill,
   continueRender,
   delayRender,
+  Img,
+  staticFile,
   useCurrentFrame,
 } from "remotion";
 import type { FeatureCollection } from "geojson";
@@ -120,7 +122,18 @@ export const MapLibreMap: React.FC<{ spec: VideoSpec }> = ({ spec }) => {
             pointerEvents: "none",
           }}
         >
-          <ShipSprite size={72} />
+          {spec.route.sprite?.image ? (
+            <Img
+              src={staticFile(spec.route.sprite.image)}
+              style={{
+                width: spec.route.sprite.size ?? 72,
+                height: "auto",
+                filter: "drop-shadow(0 2px 6px rgba(0,0,0,0.5))",
+              }}
+            />
+          ) : (
+            <ShipSprite size={spec.route.sprite?.size ?? 72} />
+          )}
         </div>
       ) : null}
     </AbsoluteFill>
