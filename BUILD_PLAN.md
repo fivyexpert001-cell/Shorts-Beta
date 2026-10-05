@@ -35,9 +35,14 @@ project is really: *generate the data, then render the skeleton with it.*
 | **Video engine** | **Remotion** | React-based; renders every frame to a real MP4. Has official map-animation support ([docs](https://www.remotion.dev/docs/maps)). This is the core. |
 | **Map (free)** | **MapLibre GL** | Open-source, no token, no usage caps, no video-ToS concerns. **Default engine.** |
 | **Map (premium)** | **Mapbox GL** | Nicer satellite / 3D styles. Metered + some video-rendering ToS limits. Supported as an option. |
-| **Voice (TTS)** | **ai33.pro** | Exports **SRT + JSON segments** → gives word/line timing we use to sync subtitles and camera moves. |
-| **Images (sprites)** | **ai33.pro** | Ships, armies, flags, icons, decorative art. Replaces fal.ai — one provider. |
-| **Music** | **ai33.pro** | Background track generation. |
+| **Voice (TTS)** | **ai33.pro** | `POST /v3/text-to-speech` with `with_transcript=true` → completed task metadata has `audio_url` + **`srt_url`** (the timing we sync to). Cheapest voices: `edge_*`/`kokoro_*`. |
+| **Images (sprites)** | **ai33.pro** | `POST /v1i/task/generate-image` — **Seedream 4.5 is available here** (`bytedance-seedream-4.5`). Replaces fal.ai; one provider. |
+| **Music** | **ai33.pro** | `POST /v1s/task/music-generation` (Suno), simple or custom mode. |
+
+> Full, verified API contract (auth, endpoints, request/response shapes) is in
+> **[`docs/ai33pro-api.md`](./docs/ai33pro-api.md)**. Base URL `https://api.ai33.pro`;
+> auth header `xi-api-key`. It's an **async task API** — create → poll
+> `GET /v1/task/{id}/full` until `status:"done"` → read result URLs from `metadata`.
 | **Script / research** | **Google Gemini** | Picks topics, writes narration, and outputs the structured *video spec* (below). |
 | **Route math** | **Turf.js** | Build GeoJSON routes, slice lines for the "draw-on" reveal, compute camera positions. |
 
@@ -182,12 +187,14 @@ Build in this order — **do not automate before one video renders by hand.**
   hangs off this working skeleton.
 
 ### Phase 2 — Voiceover + timing
-- `pipeline/2-voice.ts`: call ai33.pro TTS, save mp3 + SRT.
-- `Subtitles.tsx`: parse SRT, render timed captions synced to the audio.
+- `pipeline/2-voice.ts`: `POST /v3/text-to-speech` (`with_transcript=true`) →
+  poll `GET /v1/task/{id}/full` → download `metadata.audio_url` + `metadata.srt_url`.
+- `Subtitles.tsx`: parse the SRT, render timed captions synced to the audio.
 - Drive scene/overlay timing from the SRT instead of hardcoded frames.
 
 ### Phase 3 — Generated sprites
-- `pipeline/3-assets.ts`: ai33.pro image gen for ship/army/flag/icon.
+- `pipeline/3-assets.ts`: `POST /v1i/task/generate-image` (model `bytedance-seedream-4.5`,
+  e.g. `aspect_ratio:1:1`) → poll → download PNG for ship/army/flag/icon.
 - Build a small **reusable sprite library** (generate once, reuse across videos).
 
 ### Phase 4 — Script generation
@@ -216,9 +223,12 @@ Build in this order — **do not automate before one video renders by hand.**
   frame; use the map's `calculateCameraOptionsFromTo()` (Mapbox) / equivalent to
   make the camera follow the leading point.
   ([Mapbox cinematic routes](https://mapbox.com/blog/building-cinematic-route-animations-with-mapboxgl))
-- **Timing from SRT:** the SRT from ai33.pro is the single source of truth for
-  when captions appear and when camera beats fire — convert SRT timecodes →
-  frame numbers (`seconds * fps`).
+- **Timing from SRT:** the `srt_url` from ai33.pro TTS is the single source of
+  truth for when captions appear and when camera beats fire — convert SRT
+  timecodes → frame numbers (`seconds * fps`).
+- **Polling, not webhooks:** ai33.pro is async. A local/CLI pipeline should
+  **poll `GET /v1/task/{id}/full`** rather than pass `receive_url` (webhooks need
+  a public inbound endpoint). Check `GET /v1/credits` before batch runs.
 - **Determinism:** rendering must be a pure function of the spec + assets (no
   network calls during `remotion render`) so frames are reproducible.
 
@@ -238,9 +248,9 @@ Build in this order — **do not automate before one video renders by hand.**
 ## 9. Risks & caveats
 - **API key hygiene:** the ai33.pro key was shared in plaintext — **rotate it**.
   All keys live in `.env` (gitignored); never commit real values.
-- **ai33.pro API schema:** exact endpoints/params for TTS, image, and music must
-  be confirmed from the ai33.pro dashboard docs — the site is not reachable from
-  the build sandbox, so Phase 2/3/4 start by pinning those contracts.
+- **ai33.pro API:** ✅ verified and captured in `docs/ai33pro-api.md` (requires the
+  host `ai33.pro`/`api.ai33.pro` to be allowed in the cloud environment's network
+  policy, which has been done). It's credit-billed — watch `GET /v1/credits`.
 - **Mapbox ToS:** rendering map frames into downloadable video can be restricted;
   this is the main reason MapLibre is the default.
 - **Originality / copyright:** replicate the *format*, not specific scripts,
@@ -252,8 +262,8 @@ Build in this order — **do not automate before one video renders by hand.**
 ---
 
 ## 10. Open questions (to confirm before Phase 2)
-1. ai33.pro API: exact base URL, auth header format, and the TTS / image / music
-   endpoint request+response shapes. (Need the dashboard API docs.)
-2. Preferred narration voice + language(s).
+1. ✅ ai33.pro API — verified; see `docs/ai33pro-api.md`.
+2. Preferred narration voice — which provider/voice_id? (cheap: `edge_*`/`kokoro_*`;
+   premium/natural: `elevenlabs_*`) and language(s).
 3. Target cadence (videos/day) — informs whether we need Lambda in Phase 6.
 4. Do you want auto-upload to YouTube, or render-only for manual posting?
