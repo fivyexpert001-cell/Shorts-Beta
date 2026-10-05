@@ -193,11 +193,21 @@ a local GeoJSON basemap avoids proxy/cert/CORS issues at render time (and matche
 the plan's "no network during render" rule). Background music is deferred to
 Phase 4 (ai33.pro music) rather than a committed sample.
 
-### Phase 2 — Voiceover + timing
-- `pipeline/2-voice.ts`: `POST /v3/text-to-speech` (`with_transcript=true`) →
-  poll `GET /v1/task/{id}/full` → download `metadata.audio_url` + `metadata.srt_url`.
-- `Subtitles.tsx`: parse the SRT, render timed captions synced to the audio.
-- Drive scene/overlay timing from the SRT instead of hardcoded frames.
+### Phase 2 — Voiceover + timing 🟡 render side DONE / API side ready to run
+- `pipeline/ai33.ts`: ai33.pro client (auth, create→poll→download, credits). ✅
+- `pipeline/voice.ts` (`npm run voice`): `POST /v3/text-to-speech`
+  (`with_transcript=true`) → poll `GET /v1/task/{id}/full` → download
+  `audio_url` + `srt_url` into `public/narration/`. ✅ (run with your key)
+- `pipeline/voice-clone.ts` (`npm run clone`): upload a sample → `clone_<id>`. ✅
+- `src/lib/srt.ts` + `src/overlays/Subtitles.tsx`: parse SRT, render timed
+  captions synced by fps. ✅ **verified offline** with a caption fixture.
+- `Short.tsx` plays `<Audio>` + renders `<Subtitles>` when `spec.narration` set. ✅
+- Camera-follow (`route.cameraFollows`) added so the ship stays framed. ✅
+
+Remaining in Phase 2: run `npm run voice` with a real key to produce
+`public/narration/example.{mp3,srt}`, point the spec at them, confirm audio↔caption
+sync on a full render. (Still deciding whether to also drive camera beats from SRT
+timings vs. keeping them authored in the spec.)
 
 ### Phase 3 — Generated sprites
 - `pipeline/3-assets.ts`: `POST /v1i/task/generate-image` (model `bytedance-seedream-4.5`,

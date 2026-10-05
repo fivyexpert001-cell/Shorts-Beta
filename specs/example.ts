@@ -33,18 +33,18 @@ export const exampleSpec: VideoSpec = {
     cameraFollows: false,
   },
   overlays: [
-    { kind: "year", text: "1519", atFrame: 0, durationFrames: FPS * 3, },
+    { kind: "year", text: "1519", atFrame: 0, durationFrames: FPS * 3 },
     {
       kind: "title",
       text: "The First Voyage\nAround the World",
       atFrame: FPS * 1,
       durationFrames: FPS * 4,
     },
-    {
-      kind: "caption",
-      text: "Magellan's fleet sets sail from Spain",
-      atFrame: FPS * 5,
-      durationFrames: FPS * 5,
-    },
   ],
+  // Captions come from an SRT. This fixture lets you preview caption rendering
+  // offline. Once you run `npm run voice`, point these at the generated files:
+  //   audioSrc: "narration/example.mp3", srtSrc: "narration/example.srt"
+  narration: {
+    srtSrc: "sample-captions.srt",
+  },
 };

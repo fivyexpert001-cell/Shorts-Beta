@@ -1,8 +1,9 @@
 import React from "react";
-import { AbsoluteFill } from "remotion";
+import { AbsoluteFill, Audio, staticFile } from "remotion";
 import type { VideoSpec } from "../types/videoSpec";
 import { MapLibreMap } from "../map/MapLibreMap";
 import { Overlays } from "../overlays/Overlays";
+import { Subtitles } from "../overlays/Subtitles";
 
 export const Short: React.FC<{ spec: VideoSpec }> = ({ spec }) => {
   return (
@@ -19,6 +20,12 @@ export const Short: React.FC<{ spec: VideoSpec }> = ({ spec }) => {
       />
 
       <Overlays spec={spec} />
+
+      {/* Phase 2: voiceover + SRT-synced captions (optional) */}
+      {spec.narration?.audioSrc ? (
+        <Audio src={staticFile(spec.narration.audioSrc)} />
+      ) : null}
+      {spec.narration?.srtSrc ? <Subtitles src={spec.narration.srtSrc} /> : null}
     </AbsoluteFill>
   );
 };

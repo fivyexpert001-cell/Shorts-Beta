@@ -8,7 +8,9 @@
     "render": "remotion render Short out/example.mp4",
     "render:preview": "remotion render Short out/preview.mp4 --scale=0.5",
     "build": "remotion bundle",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "voice": "tsx pipeline/voice.ts",
+    "clone": "tsx pipeline/voice-clone.ts"
   },
   "dependencies": {
     "@remotion/cli": "4.0.200",
@@ -19,7 +21,10 @@
     "remotion": "4.0.200"
   },
   "devDependencies": {
+    "@types/node": "^22.9.0",
     "@types/react": "^18.3.12",
+    "dotenv": "^16.4.5",
+    "tsx": "^4.19.2",
     "typescript": "^5.6.3"
   }
 }

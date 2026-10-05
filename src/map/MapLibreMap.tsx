@@ -77,14 +77,20 @@ export const MapLibreMap: React.FC<{ spec: VideoSpec }> = ({ spec }) => {
 
     const handle = delayRender(`maplibre: frame ${frame}`);
     const cam = cameraAtFrame(spec, frame);
+    const progress = routeProgress(spec, frame);
+    // When cameraFollows is set, keep the leading point of the voyage centered
+    // (zoom still comes from the camera beats) so the ship stays in frame.
+    const center =
+      spec.route.cameraFollows && progress > 0
+        ? leadPoint(spec, progress)
+        : cam.center;
     map.jumpTo({
-      center: cam.center,
+      center,
       zoom: cam.zoom,
       pitch: cam.pitch ?? 0,
       bearing: cam.bearing ?? 0,
     });
 
-    const progress = routeProgress(spec, frame);
     const src = map.getSource("route") as maplibregl.GeoJSONSource | undefined;
     if (src) src.setData(slicedRoute(spec, progress));
 

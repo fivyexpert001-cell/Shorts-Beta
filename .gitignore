@@ -17,6 +17,7 @@ dist/
 
 # Generated media (large binaries — keep out of git)
 assets/generated/
+public/narration/
 output/
 *.mp4
 *.mov
