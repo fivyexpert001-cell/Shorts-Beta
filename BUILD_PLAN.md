@@ -177,14 +177,21 @@ Build in this order — **do not automate before one video renders by hand.**
 - Wire `.env` loading; confirm `.env` is gitignored.
 - Define `types/videoSpec.ts`.
 
-### Phase 1 — Render ONE hardcoded short (no APIs) ✅ the proof
-- `Short.tsx`: vertical 1080×1920 composition.
-- MapLibre map that flies to a region (hardcoded camera beats).
-- A Turf route line that draws on + a static placeholder ship PNG following it.
-- A title + year badge overlay.
-- One committed sample music file.
-- **Success = `npx remotion render` produces a watchable MP4.** Everything else
-  hangs off this working skeleton.
+### Phase 1 — Render ONE hardcoded short (no APIs) ✅ DONE
+- `Short.tsx`: vertical 1080×1920 composition. ✅
+- MapLibre map with interpolated camera beats (`src/map/`). ✅
+- A Turf route line that draws on (`useRouteReveal.ts`) + an inline SVG ship
+  sprite following the lead point. ✅
+- Title + year badge + caption overlays (`src/overlays/`). ✅
+- **Renders fully offline** via a bundled `public/countries.geojson` basemap
+  (flat stylized look, no tile server). ✅
+- `npx remotion render src/index.ts Short out/example.mp4 --gl=swiftshader`
+  produces a 12s MP4. ✅
+
+**Learnings carried forward:** maps need WebGL → `--gl=swiftshader` in headless;
+a local GeoJSON basemap avoids proxy/cert/CORS issues at render time (and matches
+the plan's "no network during render" rule). Background music is deferred to
+Phase 4 (ai33.pro music) rather than a committed sample.
 
 ### Phase 2 — Voiceover + timing
 - `pipeline/2-voice.ts`: `POST /v3/text-to-speech` (`with_transcript=true`) →

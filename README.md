@@ -11,4 +11,24 @@ Turf.js (routes) · ai33.pro (voice + images + music) · Gemini (scripts).
 
 ## Setup
 1. `cp .env.example .env` and fill in your real API keys (`.env` is gitignored).
-2. (Phase 0 onward) install deps and follow the milestones in BUILD_PLAN.md.
+2. `npm install`
+
+## Render the Phase 1 example
+The example short renders **fully offline** (bundled `public/countries.geojson`
+basemap — no map tile server or API needed):
+
+```bash
+# Preview live in the browser:
+npm run dev                 # Remotion Studio
+
+# Render to MP4 (software WebGL via SwiftShader is set in remotion.config.ts):
+npx remotion render src/index.ts Short out/example.mp4 --gl=swiftshader
+```
+
+Output: `out/example.mp4` (1080×1920, 12s). Edit `specs/example.ts` to change the
+route, camera, and overlays. See **BUILD_PLAN.md** for the roadmap (Phase 2 =
+ai33.pro voiceover + SRT-synced captions).
+
+> **Rendering notes (headless/cloud):** maps draw with WebGL, so pass
+> `--gl=swiftshader` where there's no GPU. Keeping the basemap local avoids
+> needing the render browser to reach a tile host through a proxy.
