@@ -234,9 +234,13 @@ with a real Seedream sprite (confirm the image-URL field matches `extractImageUr
 Remaining: run `npm run script` with a Gemini key (allow
 `generativelanguage.googleapis.com`) to generate a real spec end to end.
 
-### Phase 5 — Full automation
-- `pipeline/render.ts`: topic in → script → voice → assets → music → render → MP4 out.
-- One command: `npm run make -- "the voyage of Magellan"`.
+### Phase 5 — Full automation ✅ built (runs with your keys)
+- `pipeline/make.ts` (`npm run make -- "topic" [seconds]`): chains
+  script → voice → sprite → patch spec → render → `out/<slug>.mp4`. ✅
+- Each step stays independently runnable; sprites are reused across videos. ✅
+- Orchestration + graceful per-step failure **verified** (fails cleanly when a
+  key is missing). Full end-to-end run needs your GEMINI + ai33.pro keys and the
+  two API hosts allowed. Music (ai33.pro Suno) is a later add-on to this chain.
 
 ### Phase 6 — Batch + publish
 - Batch a list of topics.

@@ -102,6 +102,7 @@ async function main() {
     const result = safeParseVideoSpec(parsedJson);
     if (result.success) {
       const spec = result.data;
+      if (process.env.SPEC_ID) spec.id = process.env.SPEC_ID; // let `make` fix the id/filename
       await mkdir("specs", { recursive: true });
       const dest = join("specs", `${spec.id}.json`);
       await writeFile(dest, JSON.stringify(spec, null, 2));

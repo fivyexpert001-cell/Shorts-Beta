@@ -98,3 +98,22 @@ npx remotion render src/index.ts Short out/magellan.mp4 \
 
 `specs/example.json` is a committed reference of the exact format Gemini targets.
 Output is validated with Zod (`src/lib/validateSpec.ts`) before it's saved.
+
+## Phase 5 — one command: topic → finished MP4
+Once `.env` has `GEMINI_API_KEY`, `AI33PRO_API_KEY`, and `VOICE_ID` (and the two
+API hosts are allowed by your network policy):
+
+```bash
+npm run make -- "The voyage of Magellan" 40
+```
+
+This chains everything and writes `out/<slug>.mp4`:
+1. `script` — Gemini writes a validated spec (`specs/<slug>.json`)
+2. `voice` — ai33.pro TTS → `public/narration/<slug>.{mp3,srt}`
+3. `sprite` — ai33.pro image → `public/sprites/ship.png` (reused if present)
+4. patches the spec with the narration + sprite paths (re-validated)
+5. `remotion render` → `out/<slug>.mp4`
+
+Each step is also runnable on its own (above), so you can regenerate just the
+voice or just the art without redoing the rest. Set `SPRITE=army` to use a
+different marker; pass a different duration as the 2nd arg.

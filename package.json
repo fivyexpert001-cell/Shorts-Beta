@@ -12,7 +12,8 @@
     "voice": "tsx pipeline/voice.ts",
     "clone": "tsx pipeline/voice-clone.ts",
     "sprite": "tsx pipeline/image.ts",
-    "script": "tsx pipeline/script.ts"
+    "script": "tsx pipeline/script.ts",
+    "make": "tsx pipeline/make.ts"
   },
   "dependencies": {
     "@remotion/cli": "4.0.200",
